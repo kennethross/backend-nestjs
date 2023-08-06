@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx --no-install commitlint --edit $1
+COMMIT_LOCATION="${PWD}/.git/COMMIT_EDITMSG"
+
+npx --no-install commitlint --edit "${COMMIT_LOCATION}"
