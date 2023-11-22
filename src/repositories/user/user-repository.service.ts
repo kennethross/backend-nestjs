@@ -1,22 +1,25 @@
 import { Injectable } from '@nestjs/common';
+import { DbService } from 'src/services/db/db.service';
 
 @Injectable()
 export class UserRepositoryService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: '$2b$10$rAr0JxOcJXsiFXacd.zIwuBBe0n0hO7M0HLAwKib7hGLsUjNGIhuO',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: '$2b$10$397jPd/MputY0W6A90/b5u0leCMd9L7ibqfav1ifXMExVFxelKS5i',
-    },
-  ];
+  constructor(private readonly dbService: DbService) {}
 
   async findOne(data: { username: string }) {
     const { username } = data;
-    return this.users.find((user) => user.username === username);
+    return this.dbService.user.findFirst({
+      where: {
+        username,
+      },
+    });
+  }
+
+  async findOneById(data: { id: string }) {
+    const { id } = data;
+    return this.dbService.user.findFirst({
+      where: {
+        id,
+      },
+    });
   }
 }

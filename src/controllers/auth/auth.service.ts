@@ -20,6 +20,10 @@ export class AuthService {
 
   async validateUser(username: string, pass: string) {
     const user = await this.userRepoService.findOne({ username });
+    console.log(user);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
     const isTheSame = await this.comparePassword(pass, user.password);
     if (!isTheSame) {
       throw new UnauthorizedException();
@@ -34,10 +38,16 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.userId, username: user.username };
+    const payload = { sub: user.id, username: user.email };
     return {
       accessToken: this.jwtService.sign(payload),
     };
+  }
+
+  async userProfile(data: { userId: string }) {
+    const { userId } = data;
+    console.log(userId);
+    return this.userRepoService.findOneById({ id: userId });
   }
 
   saltPassowrd(password: string) {

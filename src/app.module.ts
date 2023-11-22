@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './logging.interceptor';
 import { CustomLoggerModule } from './services/custom-logger/custom-logger.module';
+import { DbModule } from './services/db/db.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CustomLoggerModule } from './services/custom-logger/custom-logger.modul
       isGlobal: true,
     }),
     CustomLoggerModule,
+    DbModule,
   ],
   controllers: [AppController],
   providers: [
