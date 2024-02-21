@@ -6,20 +6,23 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("MYSQL_URL")
 }
 
 model User {
-  id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  username  String      @unique
+  id        Int         @default(autoincrement()) @id
+  username  String?      @unique
   email     String      @unique
+  firstName String      @map("first_name")
+  lastName  String?      @map("last_name")
   name      String?
-  password  String
-  role      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
+  password  String     @default("")
+  role      String?    @default("")
+  createdAt DateTime @default(now()) @map("created_date")
+  updatedAt DateTime @updatedAt @map("updated_date")
+  deletedAt DateTime? @map("deleted_date")
+  deleted Int         @default(0)
 
   @@map("user")
 }

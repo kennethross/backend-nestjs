@@ -20,7 +20,6 @@ export class AuthService {
 
   async validateUser(username: string, pass: string) {
     const user = await this.userRepoService.findOne({ username });
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -44,9 +43,8 @@ export class AuthService {
     };
   }
 
-  async userProfile(data: { userId: string }) {
+  async userProfile(data: { userId: number }) {
     const { userId } = data;
-    console.log(userId);
     return this.userRepoService.findOneById({ id: userId });
   }
 
