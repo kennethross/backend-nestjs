@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -16,6 +17,7 @@ import { PostUserDto } from './dto/post-user.dto';
 import { validate } from 'class-validator';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { ValidateResultExistence } from 'src/decorators/validate-result-existence.decorators';
+import { JwtAuthGuard } from 'src/guard/jwt.guard';
 
 @ApiTags('User')
 @Controller('user')
@@ -26,17 +28,20 @@ export class UserController {
   @ApiOkResponse({
     type: GetUserEntity,
   })
+  @UseGuards(JwtAuthGuard)
   getUsers() {
     return this.userService.getAll();
   }
 
   @Get(':userId')
   @ValidateResultExistence()
+  @UseGuards(JwtAuthGuard)
   getUser(@Param('userId', ParseIntPipe) userId: number) {
     return this.userService.getOne({ userId });
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async postUser(@Body() payload: PostUserDto) {
     await validate(PostUserDto, {
       whitelist: true,
@@ -46,6 +51,7 @@ export class UserController {
 
   @Patch(':userId')
   @ApiNoContentResponse()
+  @UseGuards(JwtAuthGuard)
   patchUser(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() payload: PatchUserDto,
@@ -55,6 +61,7 @@ export class UserController {
 
   @Delete(':userId')
   @ApiNoContentResponse()
+  @UseGuards(JwtAuthGuard)
   deleteUsers(@Param('userId', ParseIntPipe) userId: number) {
     return this.userService.delete(userId);
   }
