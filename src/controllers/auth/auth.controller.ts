@@ -13,6 +13,7 @@ import { JwtAuthGuard } from './guard/jwt.guard';
 import { Request, Response } from 'express';
 import { SignInDto } from './dto/sign-in.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -38,5 +39,10 @@ export class AuthController {
     const result = await this.authService.userProfile({ userId });
     console.log(result);
     return result;
+  }
+
+  @Post('register')
+  async postRegister(@Body() registerUser: RegisterUserDto) {
+    return this.authService.registerNewUser(registerUser);
   }
 }

@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { encrypt, compare } from 'src/utils/encryption';
 import { ConfigService } from '@nestjs/config';
 import { SignInDto } from './dto/sign-in.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 type LoginUser = Omit<
   Awaited<ReturnType<UserRepositoryService['findOne']>>,
@@ -48,8 +49,34 @@ export class AuthService {
     return this.userRepoService.findOneById({ id: userId });
   }
 
-  saltPassowrd(password: string) {
-    return encrypt(password, this.configService.get('SALT_ROUNDS'));
+  async registerNewUser(newUser: RegisterUserDto) {
+    const isRegistered = await this.userRepoService.findEmail(newUser.email);
+    if (isRegistered) {
+      throw new Error('Email already registered. Please login');
+    }
+
+    const registeredUsername = await this.userRepoService.findUsername(
+      newUser.username,
+    );
+    if (registeredUsername) {
+      throw new Error(
+        'Username already registered. Please find a new username',
+      );
+    }
+
+    const encryptedPassword = await encrypt(
+      newUser.password,
+      +this.configService.get('SALT'),
+    );
+    const user = await this.userRepoService.create({
+      ...newUser,
+      role: '',
+      password: encryptedPassword,
+    });
+
+    return {
+      id: user.id,
+    };
   }
 
   comparePassword(password: string, encryptedPassword: string) {

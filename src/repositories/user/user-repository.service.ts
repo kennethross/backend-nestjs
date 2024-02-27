@@ -4,6 +4,17 @@ import { UserCreateData } from './user-create-data';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { UserUpdateData } from './user-update-data';
+import { Prisma } from '@prisma/client';
+
+const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
+  id: true,
+  username: true,
+  email: true,
+  firstName: true,
+  lastName: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 @Injectable()
 export class UserRepositoryService {
@@ -22,6 +33,7 @@ export class UserRepositoryService {
   async findOneById(data: { id: number }) {
     const { id } = data;
     return this.dbService.user.findFirst({
+      select: defaultUserSelect,
       where: {
         id,
         deleted: 0,
@@ -30,7 +42,8 @@ export class UserRepositoryService {
   }
 
   async findUsername(username: string) {
-    return this.dbService.user.findUnique({
+    return this.dbService.user.findFirst({
+      select: defaultUserSelect,
       where: {
         username,
         deleted: 0,
@@ -39,7 +52,8 @@ export class UserRepositoryService {
   }
 
   async findEmail(email: string) {
-    return this.dbService.user.findUnique({
+    return this.dbService.user.findFirst({
+      select: defaultUserSelect,
       where: {
         email,
         deleted: 0,
@@ -49,15 +63,7 @@ export class UserRepositoryService {
 
   async getAll() {
     return this.dbService.user.findMany({
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: defaultUserSelect,
       where: {
         deletedAt: null,
       },
@@ -72,15 +78,7 @@ export class UserRepositoryService {
     });
 
     return this.dbService.user.create({
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: defaultUserSelect,
       data: {
         ..._data,
       },
@@ -101,15 +99,7 @@ export class UserRepositoryService {
       where: {
         id,
       },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: defaultUserSelect,
     });
   }
 
@@ -125,6 +115,7 @@ export class UserRepositoryService {
         deletedAt: date,
         updatedAt: date,
       },
+      select: defaultUserSelect,
     });
   }
 }

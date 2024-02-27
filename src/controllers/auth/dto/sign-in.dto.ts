@@ -7,6 +7,5 @@ export class SignInDto {
   username!: string;
 
   @ApiProperty()
-  @IsStrongPassword()
   password!: string;
 }
