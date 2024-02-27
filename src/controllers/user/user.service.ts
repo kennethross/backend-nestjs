@@ -11,6 +11,10 @@ export class UserService {
     return this.userRepo.getAll();
   }
 
+  async getOne(data: { userId: number }) {
+    return this.userRepo.findOneById({ id: data.userId });
+  }
+
   async create(data: PostUserDto) {
     const userEmail = await this.userRepo.findEmail(data.email);
     if (userEmail) {

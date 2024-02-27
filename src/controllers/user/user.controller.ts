@@ -5,9 +5,9 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
-  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -15,6 +15,7 @@ import { GetUserEntity } from './entities/get-user';
 import { PostUserDto } from './dto/post-user.dto';
 import { validate } from 'class-validator';
 import { PatchUserDto } from './dto/patch-user.dto';
+import { ValidateResultExistence } from 'src/decorators/validate-result-existence.decorators';
 
 @ApiTags('User')
 @Controller('user')
@@ -30,8 +31,9 @@ export class UserController {
   }
 
   @Get(':userId')
-  getUser() {
-    return this.userService.getAll();
+  @ValidateResultExistence()
+  getUser(@Param('userId', ParseIntPipe) userId: number) {
+    return this.userService.getOne({ userId });
   }
 
   @Post()
@@ -44,15 +46,16 @@ export class UserController {
 
   @Patch(':userId')
   @ApiNoContentResponse()
-  @HttpCode(204)
-  patchUser(@Param('userId') userId: number, @Body() payload: PatchUserDto) {
-    this.userService.update({ id: +userId, payload });
+  patchUser(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body() payload: PatchUserDto,
+  ) {
+    this.userService.update({ id: userId, payload });
   }
 
   @Delete(':userId')
   @ApiNoContentResponse()
-  @HttpCode(204)
-  deleteUsers(@Param('userId') userId: number) {
-    return this.userService.delete(+userId);
+  deleteUsers(@Param('userId', ParseIntPipe) userId: number) {
+    return this.userService.delete(userId);
   }
 }
