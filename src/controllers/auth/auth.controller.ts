@@ -13,6 +13,7 @@ import { Request, Response } from 'express';
 import { SignInDto } from './dto/sign-in.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { User } from 'src/decorators/user.decorator';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -33,10 +34,8 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Req() req: Request) {
-    const { userId } = req['user'] as { userId: number };
-    const result = await this.authService.userProfile({ userId });
-    console.log(result);
+  async getProfile(@User() user: { id: number; username: string }) {
+    const result = await this.authService.userProfile({ userId: user.id });
     return result;
   }
 
