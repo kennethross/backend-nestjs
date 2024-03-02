@@ -5,8 +5,8 @@ import { AuthModule } from './controllers/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './logging.interceptor';
-import { CustomLoggerModule } from './services/custom-logger/custom-logger.module';
-import { DbModule } from './services/db/db.module';
+import { CustomLoggerModule } from './shared/services/custom-logger/custom-logger.module';
+import { DbModule } from './shared/services/db/db.module';
 import { UserModule } from './controllers/user/user.module';
 
 @Module({

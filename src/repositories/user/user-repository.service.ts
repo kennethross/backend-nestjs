@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbService } from 'src/services/db/db.service';
+import { DbService } from 'src/shared/services/db/db.service';
 import { UserCreateData } from './user-create-data';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';

@@ -16,8 +16,8 @@ import { GetUserEntity } from './entities/get-user';
 import { PostUserDto } from './dto/post-user.dto';
 import { validate } from 'class-validator';
 import { PatchUserDto } from './dto/patch-user.dto';
-import { ValidateResultExistence } from 'src/decorators/validate-result-existence.decorators';
-import { JwtAuthGuard } from 'src/guard/jwt.guard';
+import { ValidateResultExistence } from 'src/shared/decorators/validate-result-existence.decorators';
+import { JwtAuthGuard } from 'src/shared/guard/jwt.guard';
 
 @ApiTags('User')
 @Controller('user')
