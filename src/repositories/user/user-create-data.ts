@@ -15,7 +15,4 @@ export class UserCreateData {
 
   @Allow()
   password!: string;
-
-  @Allow()
-  role!: string;
 }

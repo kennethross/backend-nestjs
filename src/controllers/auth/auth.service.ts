@@ -20,11 +20,13 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string) {
-    const user = await this.userRepoService.findOne({ username });
+    const user = await this.userRepoService.findOneIncludePassword({
+      username,
+    });
     if (!user) {
       throw new UnauthorizedException();
     }
-    const isTheSame = await this.comparePassword(pass, user.password);
+    const isTheSame = this.comparePassword(pass, user.password);
     if (!isTheSame) {
       throw new UnauthorizedException();
     }
@@ -70,7 +72,6 @@ export class AuthService {
     );
     const user = await this.userRepoService.create({
       ...newUser,
-      role: '',
       password: encryptedPassword,
     });
 

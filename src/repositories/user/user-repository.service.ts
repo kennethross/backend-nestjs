@@ -20,11 +20,28 @@ const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
 export class UserRepositoryService {
   constructor(private readonly dbService: DbService) {}
 
-  async findOne(data: { username: string }) {
-    const { username } = data;
+  async findOneIncludePassword(
+    data: Pick<Prisma.UserWhereInput, 'id' | 'username' | 'email'>,
+  ) {
     return this.dbService.user.findFirst({
+      select: {
+        ...defaultUserSelect,
+        password: true,
+      },
       where: {
-        username,
+        ...data,
+        deleted: 0,
+      },
+    });
+  }
+
+  async findOne(
+    data: Pick<Prisma.UserWhereInput, 'id' | 'username' | 'email'>,
+  ) {
+    return this.dbService.user.findFirst({
+      select: defaultUserSelect,
+      where: {
+        ...data,
         deleted: 0,
       },
     });
@@ -56,6 +73,19 @@ export class UserRepositoryService {
       select: defaultUserSelect,
       where: {
         email,
+        deleted: 0,
+      },
+    });
+  }
+
+  async findManyByUserIds(data: { userIds: number[] }) {
+    const { userIds } = data;
+    return this.dbService.user.findMany({
+      select: defaultUserSelect,
+      where: {
+        id: {
+          in: userIds,
+        },
         deleted: 0,
       },
     });

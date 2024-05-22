@@ -10,19 +10,103 @@ datasource db {
   url      = env("MYSQL_URL")
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
 model User {
-  id        Int         @default(autoincrement()) @id
-  username  String?      @unique
-  email     String      @unique
-  firstName String      @map("first_name")
-  lastName  String?      @map("last_name")
+  id        Int           @default(autoincrement()) @id
+  username  String?     
+  email     String      
+  firstName String        @map("first_name")
+  lastName  String?       @map("last_name")
   name      String?
-  password  String     @default("")
-  role      String?    @default("")
-  createdAt DateTime @default(now()) @map("created_date")
-  updatedAt DateTime @updatedAt @map("updated_date")
-  deletedAt DateTime? @map("deleted_date")
-  deleted Int         @default(0)
+  password  String        @default("")
+  role      String?       @default("")
+  createdAt DateTime      @default(now()) @map("created_date")
+  updatedAt DateTime      @updatedAt @map("updated_date")
+  deletedAt DateTime?     @map("deleted_date")
+  deleted Int             @default(0)
+
+  userOrgRoles   UserOrganisationRole[]
 
   @@map("user")
+}
+
+model Organisation {
+  id        Int           @default(autoincrement()) @id
+  name      String
+
+  createdAt DateTime      @default(now()) @map("created_date")
+  updatedAt DateTime      @updatedAt @map("updated_date")
+  deletedAt DateTime?     @map("deleted_date")
+  deleted Int             @default(0)
+
+  userOrgRoles UserOrganisationRole[]
+
+  @@map("organisation")
+}
+
+model UserOrganisationRole {
+  id        Int         @default(autoincrement()) @id
+
+  userId    Int         @map("user_id")
+  user      User        @relation(fields:[userId], references: [id])
+  roleName  String      @map("role_name")
+  role      Role        @relation(fields: [roleName], references: [name])
+  organisationId Int    @map("organisation_id")
+  organisation Organisation @relation(fields:[organisationId], references: [id])
+
+  createdAt DateTime    @default(now()) @map("created_date")
+  updatedAt DateTime    @updatedAt @map("updated_date")
+  deletedAt DateTime?   @map("deleted_date")
+  deleted   Int         @default(0)
+
+  @@map("user_organisation_role")
+}
+
+model Role {
+  id        Int         @default(autoincrement()) @id
+  name      String      @unique
+
+  createdAt DateTime    @default(now()) @map("created_date")
+  updatedAt DateTime    @updatedAt @map("updated_date")
+  deletedAt DateTime?   @map("deleted_date")
+  deleted   Int         @default(0)
+
+  policies  Policy[]
+  userOrgRoles UserOrganisationRole[]
+
+  @@map("role")
+}
+
+model Policy {
+  id            Int         @default(autoincrement()) @id
+  actionName    String      @map("action_name")
+
+  resourceName  String      @map("resource_name")
+  resource      Resource    @relation(fields: [resourceName], references: [name])
+  roleName      String      @map("role_name")
+  role          Role        @relation(fields: [roleName], references: [name])
+
+  createdAt     DateTime    @default(now()) @map("created_date")
+  updatedAt     DateTime    @updatedAt @map("updated_date")
+  deletedAt     DateTime?   @map("deleted_date")
+  deleted       Int         @default(0)
+
+  @@map("policy")
+}
+
+model Resource {
+  id        Int         @default(autoincrement()) @id
+  name      String      @unique
+
+  policies Policy[]
+
+  createdAt DateTime    @default(now()) @map("created_date")
+  updatedAt DateTime    @updatedAt @map("updated_date")
+  deletedAt DateTime?   @map("deleted_date")
+  deleted   Int         @default(0)
+
+  @@map("resource")
 }

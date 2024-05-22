@@ -31,16 +31,4 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getProfile(@User() user: { id: number; username: string }) {
-    const result = await this.authService.userProfile({ userId: user.id });
-    return result;
-  }
-
-  @Post('register')
-  async postRegister(@Body() registerUser: RegisterUserDto) {
-    return this.authService.registerNewUser(registerUser);
-  }
 }
