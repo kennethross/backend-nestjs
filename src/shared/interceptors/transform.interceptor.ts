@@ -4,8 +4,8 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+import { FastifyReply } from 'fastify';
 import { Observable, map } from 'rxjs';
-import { Response } from 'express';
 
 export interface ResponseBody<T> {
   code: number;
@@ -21,7 +21,7 @@ export class TransformInterceptor<T>
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<ResponseBody<T>> {
-    const res = context.switchToHttp().getResponse<Response>();
+    const res = context.switchToHttp().getResponse<FastifyReply>();
     return next.handle().pipe(
       map((data) => {
         if (data !== undefined) {

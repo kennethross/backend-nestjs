@@ -1,19 +1,10 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { JwtAuthGuard } from '../../shared/guard/jwt.guard';
-import { Request, Response } from 'express';
-import { SignInDto } from './dto/sign-in.dto';
+import '@fastify/cookie'; // for type declaration when tsc individual files
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { User } from 'src/shared/decorators/user.decorator';
+import { FastifyReply } from 'fastify';
+
+import { AuthService } from './auth.service';
+import { SignInDto } from './dto/sign-in.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -23,10 +14,10 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() user: SignInDto,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: FastifyReply,
   ) {
     const token = await this.authService.signIn(user);
-    res.cookie('access_token', token.accessToken, {
+    res.setCookie('access_token', token.accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
