@@ -3,6 +3,7 @@ import { plainToInstance } from 'class-transformer';
 import { DepartmentRepositoryService } from 'src/repositories/department-repository/department-repository.service';
 import { OrganisationRepositoryService } from 'src/repositories/organisation-repository/organisation-repository.service';
 import { UserOrganisationRoleRepositoryService } from 'src/repositories/user-organisation-role-repository/user-organisation-role-repository.service';
+import { OrganisationAdminRole } from 'src/shared/enums/role.enums';
 
 import { CreateOrganisationDto } from './dto/create-organisation.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
@@ -88,7 +89,8 @@ export class SuperAdminService {
       const { user, ...rest } = result;
       const userEntity = new UserEntity(user);
       return new OrganisationAdminEntity({
-        ...rest,
+        userId: rest.userId,
+        roleName: rest.roleName as OrganisationAdminRole,
         user: userEntity,
       });
     });

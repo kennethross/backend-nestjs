@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { DbService } from 'src/shared/services/db/db.service';
-import { UserOrganisationRoleCreateData } from './user-organisation-role-create-data';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { DbService } from 'src/shared/services/db/db.service';
+
+import { UserOrganisationRoleCreateData } from './user-organisation-role-create-data';
 
 @Injectable()
 export class UserOrganisationRoleRepositoryService {

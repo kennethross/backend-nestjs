@@ -1,12 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { OrganisationAdminRole } from 'src/shared/enums/role.enums';
+
 import { UserEntity } from './user.entity';
 
 export class OrganisationAdminEntity {
   @ApiProperty()
   userId!: number;
 
-  @ApiProperty()
-  roleName!: string;
+  @ApiProperty({
+    enum: OrganisationAdminRole,
+  })
+  roleName!: OrganisationAdminRole;
 
   @ApiProperty({
     type: UserEntity,
