@@ -28,7 +28,22 @@ export class UserOrganisationRoleRepositoryService {
       },
     });
   }
-  å;
+
+  async findManySelectCustom<T extends Prisma.UserOrganisationRoleSelect>(
+    data: Pick<
+      Prisma.UserOrganisationRoleWhereInput,
+      'id' | 'organisationId' | 'userId'
+    >,
+    select: T,
+  ) {
+    return this.dbService.userOrganisationRole.findMany({
+      select,
+      where: {
+        ...data,
+        deleted: 0,
+      },
+    });
+  }
 
   async findOne(
     data: Pick<

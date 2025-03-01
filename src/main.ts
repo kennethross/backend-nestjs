@@ -22,6 +22,16 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Backend')
     .setVersion('1.0')
+    .setContact('k5h-r2s', '', 'k5hr2s@gmail.com')
+    .addCookieAuth(
+      'access_token',
+      {
+        type: 'http',
+        in: 'Header',
+        scheme: 'Bearer',
+      },
+      'access_token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

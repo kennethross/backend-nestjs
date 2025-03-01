@@ -1,11 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsStrongPassword } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class SignInDto {
-  @ApiProperty()
+  @ApiProperty({
+    example: 'super_admin',
+  })
   @IsString()
   username!: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'admin123',
+  })
   password!: string;
 }

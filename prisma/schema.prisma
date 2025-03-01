@@ -23,12 +23,15 @@ model User {
   name      String?
   password  String        @default("")
   role      String?       @default("")
+  superAdmin Boolean     @default(false) @map("super_admin")
   createdAt DateTime      @default(now()) @map("created_date")
   updatedAt DateTime      @updatedAt @map("updated_date")
   deletedAt DateTime?     @map("deleted_date")
   deleted Int             @default(0)
 
   userOrgRoles   UserOrganisationRole[]
+  departmentTeams DepartmentTeam[]
+  departmentMember DepartmentMember[]
 
   @@map("user")
 }
@@ -43,6 +46,7 @@ model Organisation {
   deleted Int             @default(0)
 
   userOrgRoles UserOrganisationRole[]
+  departments Department[]
 
   @@map("organisation")
 }
@@ -109,4 +113,79 @@ model Resource {
   deleted   Int         @default(0)
 
   @@map("resource")
+}
+
+model Department {
+  id        Int         @default(autoincrement()) @id
+  name      String
+
+  organisationId Int    @map("organisation_id")
+  organisation Organisation @relation(fields:[organisationId], references: [id])
+
+  departmentPositionTypes DepartmentPositionType[]
+  departmentTeams DepartmentTeam[]
+  departmentMembers DepartmentMember[]
+
+  createdAt DateTime    @default(now()) @map("created_date")
+  updatedAt DateTime    @updatedAt @map("updated_date")
+  deletedAt DateTime?   @map("deleted_date")
+  deleted   Int         @default(0)
+
+  @@map("department")
+}
+
+model DepartmentPositionType {
+  id        Int         @default(autoincrement()) @id
+  name      String      
+  displayName String  @map("display_name")
+
+  departmentId Int  @map("department_id")
+  department Department @relation(fields:[departmentId], references: [id])
+
+  createdAt DateTime    @default(now()) @map("created_date")
+  updatedAt DateTime    @updatedAt @map("updated_date")
+  deletedAt DateTime?   @map("deleted_date")
+  deleted   Int         @default(0)
+
+  departmentMembers DepartmentMember[]
+
+  @@map("department_position_type")
+}
+
+model DepartmentMember {
+  id        Int         @default(autoincrement()) @id
+
+  userId Int  @map("user_id")
+  user User @relation(fields:[userId], references: [id])
+
+  departmentPositionTypeId Int  @map("department_position_type_id")
+  departmentPositionType DepartmentPositionType @relation(fields:[departmentPositionTypeId], references:[id])
+
+  departmentId Int  @map("department_id")
+  department Department @relation(fields:[departmentId], references: [id])
+
+  createdAt DateTime    @default(now()) @map("created_date")
+  updatedAt DateTime    @updatedAt @map("updated_date")
+  deletedAt DateTime?   @map("deleted_date")
+  deleted   Int         @default(0)
+
+  @@map("department_member")
+}
+
+model DepartmentTeam {
+
+  id        Int         @default(autoincrement()) @id
+
+  userId Int  @map("user_id")
+  user User @relation(fields:[userId], references: [id])
+
+  departmentId Int @map("department_id")
+  department Department @relation(fields:[departmentId], references: [id])
+
+  createdAt DateTime    @default(now()) @map("created_date")
+  updatedAt DateTime    @updatedAt @map("updated_date")
+  deletedAt DateTime?   @map("deleted_date")
+  deleted   Int         @default(0)
+
+  @@map("department_team")
 }

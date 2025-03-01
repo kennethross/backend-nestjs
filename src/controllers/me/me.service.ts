@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OrganisationRepositoryService } from 'src/repositories/organisation-repository/organisation-repository.service';
-import { UserOrganisationRoleRepositoryService } from 'src/repositories/user-organisation-role-repository/user-organisation-role-repository.service';
 import { UserRepositoryService } from 'src/repositories/user/user-repository.service';
+import { UserOrganisationRoleRepositoryService } from 'src/repositories/user-organisation-role-repository/user-organisation-role-repository.service';
 
 @Injectable()
 export class MeService {

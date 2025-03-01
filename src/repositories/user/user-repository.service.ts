@@ -12,6 +12,7 @@ const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   email: true,
   firstName: true,
   lastName: true,
+  superAdmin: true,
   createdAt: true,
   updatedAt: true,
 });

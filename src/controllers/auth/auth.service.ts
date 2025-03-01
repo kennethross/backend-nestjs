@@ -1,15 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserRepositoryService } from 'src/repositories/user/user-repository.service';
-import { JwtService } from '@nestjs/jwt';
-import { encrypt, compare } from 'src/shared/utils/encryption';
 import { ConfigService } from '@nestjs/config';
-import { SignInDto } from './dto/sign-in.dto';
-import { RegisterUserDto } from './dto/register-user.dto';
+import { JwtService } from '@nestjs/jwt';
+import { UserRepositoryService } from 'src/repositories/user/user-repository.service';
+import { encrypt, compare } from 'src/shared/utils/encryption';
 
-type LoginUser = Omit<
-  Awaited<ReturnType<UserRepositoryService['findOne']>>,
-  'password'
->;
+import { RegisterUserDto } from './dto/register-user.dto';
+import { SignInDto } from './dto/sign-in.dto';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +36,11 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.id, username: user.email };
+    const payload = {
+      sub: user.id,
+      username: user.email,
+      superAdmin: user.superAdmin,
+    };
     return {
       accessToken: this.jwtService.sign(payload),
     };
