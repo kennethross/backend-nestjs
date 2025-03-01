@@ -1,5 +1,4 @@
 /* eslint-disable import/order */
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   Body,
   ClassSerializerInterceptor,
@@ -7,7 +6,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  Inject,
   Param,
   Patch,
   Post,
@@ -22,7 +20,6 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { Cache } from 'cache-manager';
 import { JwtAuthGuard } from 'src/shared/guard/jwt.guard';
 import { SuperAdminGuard } from 'src/shared/guard/super-admin.guard';
 import { generateApiOkPaginationSchema } from 'src/shared/utils/generate-api-ok-schema';
@@ -33,7 +30,6 @@ import { DepartmentEntity } from './entities/department.entity';
 import { OrganisationAdminEntity } from './entities/organisation-admin.entity';
 import { OrganisationEntity } from './entities/organisation.entity';
 import { SuperAdminService } from './super-admin.service';
-import { CustomCacheInterceptor } from 'src/shared/interceptors/custom-cache.interceptor';
 import { CreateOrganisationDto } from './dto/create-organisation.dto';
 import { UpdateOrganisationDto } from './dto/update-organisation.dto';
 
@@ -47,13 +43,9 @@ import { UpdateOrganisationDto } from './dto/update-organisation.dto';
   PaginationQueryDto,
 )
 export class SuperAdminController {
-  constructor(
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-    private readonly superAdminService: SuperAdminService,
-  ) {}
+  constructor(private readonly superAdminService: SuperAdminService) {}
 
   @Get('organisations')
-  // @UseInterceptors(CustomCacheInterceptor)
   @ApiOkResponse({
     schema: generateApiOkPaginationSchema({
       $ref: getSchemaPath(OrganisationEntity),
@@ -101,7 +93,6 @@ export class SuperAdminController {
   }
 
   @Get('organisations/:organisationId')
-  @UseInterceptors(CustomCacheInterceptor)
   @ApiOkResponse({
     description: 'List of organisations',
     type: OrganisationEntity,

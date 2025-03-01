@@ -18,7 +18,6 @@ import { RoleRepositoryModule } from './repositories/role-repository/role-reposi
 import { UserRoleRepositoryModule } from './repositories/user-organisation-role-repository/user-organisation-role-repository.module';
 import { CustomLoggerModule } from './shared/services/custom-logger/custom-logger.module';
 import { DbModule } from './shared/services/db/db.module';
-import { RedisCacheModule } from './shared/services/redis-cache/redis-cache.module';
 
 @Module({
   imports: [
@@ -26,7 +25,6 @@ import { RedisCacheModule } from './shared/services/redis-cache/redis-cache.modu
       isGlobal: true,
       load: [configuration],
     }),
-    RedisCacheModule,
     CustomLoggerModule,
     AuthModule,
     SuperAdminModule,
@@ -39,7 +37,6 @@ import { RedisCacheModule } from './shared/services/redis-cache/redis-cache.modu
     RoleRepositoryModule,
     DepartmentModule,
     DepartmentRepositoryModule,
-    RedisCacheModule,
   ],
   controllers: [AppController],
   providers: [
